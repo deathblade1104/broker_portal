@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ravenops-be-ingress
+  name: we-brokered-ingress
   namespace: staging-services
   annotations:
     alb.ingress.kubernetes.io/load-balancer-name: k8s-external-lb
@@ -19,13 +19,13 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: raven.wwistaging.in
+    - host: brokered.wwistaging.in
       http:
         paths:
           - pathType: Prefix
             path: /
             backend:
               service:
-                name: raven-ops-service
+                name: we-brokered-service
                 port:
                   number: 80

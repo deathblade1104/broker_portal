@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: raven-ops
+  name: we-brokered
   namespace: staging-services
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: raven-ops
+      app: we-brokered
   template:
     metadata:
       labels:
-        app: raven-ops
+        app: we-brokered
     spec:
       containers:
-        - name: raven-ops
-          image: 767397791769.dkr.ecr.ap-south-1.amazonaws.com/raven-ops:109
+        - name: we-brokered
+          image: 767397791769.dkr.ecr.ap-south-1.amazonaws.com/we-brokered:latest
           ports:
             - containerPort: 3001
           env:
@@ -38,12 +38,10 @@ spec:
                 secretKeyRef:
                   name: raven-ops-secrets
                   key: MONGO_PASSWORD
-            - name: USER_MGMT_BASE_URL
-              value: "https://ums.wwistaging.in"
             - name: PG_DB_TYPE
               value: "postgres"
             - name: PG_DB
-              value: "ravenops"
+              value: "hackathon2024"
             - name: PG_PORT
               value: "5432"
             - name: PG_USER
@@ -58,35 +56,19 @@ spec:
                   key: PG_PASSWORD
             - name: PG_HOST
               value: "ww-staging-psql.c3iiq4a4gzuc.ap-south-1.rds.amazonaws.com"
-            - name: NEW_RELIC_APP_NAME
-              value: "raven-ops"
-          volumeMounts:
-            - name: raven-ops-storage
-              mountPath: /app/mnt/data
-      volumes:
-        - name: raven-ops-storage
-          persistentVolumeClaim:
-            claimName: raven-ops-pvc
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: raven-ops-pvc
-  namespace: staging-services
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
-  storageClassName: gp2  # Specify the StorageClass name
-
+            - name: SERVICE_NAME
+              value: weBrokered
+            - name: NODE_ENV
+              value: development
+            - name: LOGGER_MIN_LEVEL
+              value: debug
+            - name: DB_LOGGING
+              value: "false"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: raven-ops-service
+  name: we-brokered-service
   namespace: staging-services
 spec:
   type: ClusterIP
@@ -96,5 +78,5 @@ spec:
     port: 80
     targetPort: 3001
   selector:
-    app: raven-ops
+    app: we-brokered
     
