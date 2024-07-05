@@ -1,26 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBrokerReferredLeadDto } from './dto/create-broker_referred_lead.dto';
-import { UpdateBrokerReferredLeadDto } from './dto/update-broker_referred_lead.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BaseCrudService } from '../../common/services/baseCrud.service';
+import { BrokerReferredLeadsRepository } from './broker_referrred_leads.repository';
+import { BrokerReferredLead } from './entities/broker_referred_lead.entity';
 
 @Injectable()
-export class BrokerReferredLeadsService {
-  create(createBrokerReferredLeadDto: CreateBrokerReferredLeadDto) {
-    return 'This action adds a new brokerReferredLead';
-  }
-
-  findAll() {
-    return `This action returns all brokerReferredLeads`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} brokerReferredLead`;
-  }
-
-  update(id: number, updateBrokerReferredLeadDto: UpdateBrokerReferredLeadDto) {
-    return `This action updates a #${id} brokerReferredLead`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} brokerReferredLead`;
+export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLead> {
+  constructor(
+    @InjectRepository(BrokerReferredLeadsRepository)
+    private readonly repo: BrokerReferredLeadsRepository,
+  ) {
+    super(repo, 'BrokerReferredLeads');
   }
 }
