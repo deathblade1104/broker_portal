@@ -17,4 +17,8 @@ export class UsersService extends BaseCrudService<User> {
   async findUserByEmail(email: string): Promise<User[]> {
     return await this.findAll({ where: { email } });
   }
+
+  async createUser(dto: Partial<User>) {
+    return await this.upsertOne(dto);
+  }
 }

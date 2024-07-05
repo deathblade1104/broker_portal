@@ -1,7 +1,7 @@
 import { z } from 'nestjs-zod/z';
 import { CompanySchema } from '../companies/companies.zod.schema';
 
-export const UserSchema = z
+export const SignUpUserSchema = z
   .object({
     name: z.string().min(1),
     email: z.string().min(1).email(),

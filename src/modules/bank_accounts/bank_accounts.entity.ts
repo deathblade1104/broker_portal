@@ -1,11 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { AbstractEntity } from '../../database/postgres/abstract.entity';
 
 @Entity('bank-accounts')
 export class BankAccount extends AbstractEntity<BankAccount> {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column()
   bank_name: string;
 

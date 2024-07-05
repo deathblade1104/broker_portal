@@ -1,18 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { AbstractEntity } from '../../../database/postgres/abstract.entity';
 import { User } from '../../users/entities/user.entity';
 import { BrokerReferredLeadStatus } from '../broker_referred_leads.enum';
 
 @Entity('broker-referred-leads')
-export class BrokerReferredLead {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class BrokerReferredLead extends AbstractEntity<BrokerReferredLead> {
   @Column({ nullable: true })
   client_name: string;
 
@@ -23,9 +15,9 @@ export class BrokerReferredLead {
   no_of_desks: number;
 
   @Column()
-  tenure: number;
+  tenure_in_months: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   building_id: string;
 
   // @ManyToOne(() => Building, { nullable: true })
@@ -45,9 +37,6 @@ export class BrokerReferredLead {
   @JoinColumn({ name: 'broker_id' })
   broker: User;
 
-  @Column()
-  projected_earnings: number;
-
   @Column({
     type: 'enum',
     enum: BrokerReferredLeadStatus,
@@ -55,7 +44,7 @@ export class BrokerReferredLead {
   })
   status: BrokerReferredLeadStatus;
 
-  @Column()
+  @Column({ type: 'text' })
   city: string;
 
   @Column({ nullable: true })

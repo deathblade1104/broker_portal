@@ -8,6 +8,7 @@ export class User extends AbstractEdittableEntity<User> {
   name: string;
 
   @Column({ unique: true })
+  //Add index_ing
   email: string;
 
   @Column({ unique: true })
