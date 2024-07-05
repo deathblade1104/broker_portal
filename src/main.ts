@@ -3,10 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import { AppModule } from './app.module';
-import {
-  NewrelicInterceptor,
-  ResponseInterceptor,
-} from './common/interceptors';
+import { ResponseInterceptor } from './common/interceptors';
 import { setupSwagger } from './common/middlewares/swagger/swagger.config';
 
 async function bootstrap() {
@@ -20,10 +17,7 @@ async function bootstrap() {
   patchNestJsSwagger();
   setupSwagger(app);
   //app.useGlobalFilters(new ZodFilter(), new GlobalExceptionFilter());
-  app.useGlobalInterceptors(
-    new NewrelicInterceptor(),
-    new ResponseInterceptor(),
-  );
+  app.useGlobalInterceptors(new ResponseInterceptor());
   app.enableCors();
   const logger = new Logger('AppBootstrap');
   await app.listen(port);

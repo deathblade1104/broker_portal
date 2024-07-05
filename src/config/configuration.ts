@@ -32,11 +32,4 @@ export default () => ({
     username: parsedConfig.data.MONGO_USERNAME,
     password: parsedConfig.data.MONGO_PASSWORD,
   },
-  user_management: {
-    base_url: parsedConfig.data.USER_MGMT_BASE_URL,
-  },
-  okta: {
-    domain: parsedConfig.data.OKTA_DOMAIN,
-    client: parsedConfig.data.OKTA_CLIENT_ID,
-  },
 });

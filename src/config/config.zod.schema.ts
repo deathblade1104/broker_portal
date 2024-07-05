@@ -17,9 +17,6 @@ export const configSchema = z.object({
   METABASE_EXPIRY: z.coerce.number(),
   MONGO_USERNAME: z.string().min(1, 'MONGO_USERNAME is required'),
   MONGO_PASSWORD: z.string().min(1, 'MONGO_PASSWORD is required'),
-  USER_MGMT_BASE_URL: z.string().min(1, 'USER_MGMT_BASE_URL is required'),
-  OKTA_DOMAIN: z.string(),
-  OKTA_CLIENT_ID: z.string(),
 });
 
 export type EnvConfig = z.infer<typeof configSchema>;

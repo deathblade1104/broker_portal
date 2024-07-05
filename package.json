@@ -29,6 +29,7 @@
     "@nestjs/terminus": "^10.2.3",
     "@nestjs/typeorm": "^10.0.2",
     "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "jest-mock-extended": "^3.0.7",
     "jsonwebtoken": "^9.0.2",
