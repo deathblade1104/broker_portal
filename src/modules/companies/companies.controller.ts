@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { CustomResponseBody } from '../../common/providers/customResponse';
 import { CompaniesService } from './companies.service';
 
 @ApiTags('companies')
@@ -8,8 +9,11 @@ export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Get()
-  findAll() {
-    return this.companiesService.findAll();
+  async findAll() {
+    return new CustomResponseBody(
+      'Fetched Companies Successfully',
+      await this.companiesService.findAll(),
+    );
   }
 }
 

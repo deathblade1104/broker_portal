@@ -1,10 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { AbstractEntity } from '../../../database/postgres/abstract.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { AbstractEdittableEntity } from '../../../database/postgres/abstract.entity';
+import { BrokerLeadHistories } from '../../broker_lead_history/broker_lead_histories.entity';
 import { User } from '../../users/entities/user.entity';
 import { BrokerReferredLeadStatus } from '../broker_referred_leads.enum';
 
 @Entity('broker-referred-leads')
-export class BrokerReferredLead extends AbstractEntity<BrokerReferredLead> {
+export class BrokerReferredLead extends AbstractEdittableEntity<BrokerReferredLead> {
   @Column({ nullable: true })
   client_name: string;
 
@@ -52,4 +53,10 @@ export class BrokerReferredLead extends AbstractEntity<BrokerReferredLead> {
 
   @Column({ type: 'timestamp', nullable: true })
   closed_at: Date;
+
+  @OneToMany(
+    () => BrokerLeadHistories,
+    BrokerLeadHistories => BrokerLeadHistories.lead,
+  )
+  lead: BrokerLeadHistories[];
 }

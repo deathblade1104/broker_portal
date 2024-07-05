@@ -1,10 +1,24 @@
-import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiPaginationQuery, PaginateQuery } from 'nestjs-paginate';
+import { ApiCustomResponseObject } from '../../common/decorators/api-response.decorator';
 import { ZodPipe } from '../../common/pipes/zod.pipe';
 import { CustomResponseBody } from '../../common/providers/customResponse';
+import { brokerReferredLeadConfig } from './broker_referred_leads.config';
 import { BrokerReferredLeadsService } from './broker_referred_leads.service';
 import { BrokerReferredLeadsSchema } from './broker_referred_leads.zod.schema';
-import { CreateBrokerReferredLeadDto } from './dto/create-broker_referred_lead.dto';
+import {
+  CreateBrokerReferredLeadDto,
+  LeadsPaginatedResponseDto,
+} from './dto/create-broker_referred_lead.dto';
 
 @ApiTags('broker-referred-leads')
 @Controller('broker-referred-leads')
@@ -27,10 +41,12 @@ export class BrokerReferredLeadsController {
   }
 
   @Get()
-  async findAll() {
+  @ApiPaginationQuery(brokerReferredLeadConfig)
+  @ApiCustomResponseObject(LeadsPaginatedResponseDto)
+  async findAll(@Query() query: PaginateQuery) {
     return new CustomResponseBody(
-      'Leads Fetched Successfully',
-      await this.brokerReferredLeadsService.findAll(),
+      'Leads Paginated and Fetched Successfully',
+      await this.brokerReferredLeadsService.getAllPaginated(query),
     );
   }
 
