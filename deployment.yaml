@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: raven-ops
+  namespace: staging-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: raven-ops
+  template:
+    metadata:
+      labels:
+        app: raven-ops
+    spec:
+      containers:
+        - name: raven-ops
+          image: 767397791769.dkr.ecr.ap-south-1.amazonaws.com/raven-ops:109
+          ports:
+            - containerPort: 3001
+          env:
+            - name: METABASE_EXPIRY
+              value: "3600"
+            - name: METABASE_SITE_URL
+              value: "https://metabase-stage.wework.co.in"
+            - name: METABASE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: raven-ops-secrets
+                  key: METABASE_SECRET_KEY
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: raven-ops-secrets
+                  key: MONGO_USERNAME
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: raven-ops-secrets
+                  key: MONGO_PASSWORD
+            - name: USER_MGMT_BASE_URL
+              value: "https://ums.wwistaging.in"
+            - name: PG_DB_TYPE
+              value: "postgres"
+            - name: PG_DB
+              value: "ravenops"
+            - name: PG_PORT
+              value: "5432"
+            - name: PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: raven-ops-secrets
+                  key: PG_USER
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: raven-ops-secrets
+                  key: PG_PASSWORD
+            - name: PG_HOST
+              value: "ww-staging-psql.c3iiq4a4gzuc.ap-south-1.rds.amazonaws.com"
+            - name: NEW_RELIC_APP_NAME
+              value: "raven-ops"
+          volumeMounts:
+            - name: raven-ops-storage
+              mountPath: /app/mnt/data
+      volumes:
+        - name: raven-ops-storage
+          persistentVolumeClaim:
+            claimName: raven-ops-pvc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: raven-ops-pvc
+  namespace: staging-services
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: gp2  # Specify the StorageClass name
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: raven-ops-service
+  namespace: staging-services
+spec:
+  type: ClusterIP
+  ports:
+  - name: http-web
+    protocol: TCP
+    port: 80
+    targetPort: 3001
+  selector:
+    app: raven-ops
+    
