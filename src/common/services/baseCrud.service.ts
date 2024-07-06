@@ -168,7 +168,7 @@ export class BaseCrudService<T extends IBaseEntity> {
     manager?: EntityManager,
   ): Promise<T> {
     const repo = this.getRepository(manager);
-    
+
     try {
       const result = await repo.save(updateData);
       Logger.log('Upsert operation successful:', result);

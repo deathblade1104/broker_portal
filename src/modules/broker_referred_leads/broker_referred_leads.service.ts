@@ -15,7 +15,7 @@ import {
   UpdateStatusDto,
 } from './dto';
 import { BrokerReferredLead } from './entities/broker_referred_lead.entity';
-import { feeCalculator } from './feeCalculator';
+import { feeCalculator } from './FeeCalculator';
 
 @Injectable()
 export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLead> {

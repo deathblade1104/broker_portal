@@ -21,7 +21,7 @@ export const configSchema = z.object({
   EMAIL_PORT: z.coerce.number().int(),
   EMAIL_SECURE: z.coerce.boolean(),
   EMAIL_USER: z.string().email(),
-  EMAIL_PASSWORD: z.password(),
+  EMAIL_PASSWORD: z.string().min(1),
   EMAIL_FROM: z.string().email(),
 });
 
