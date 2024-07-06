@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, PaginateQuery } from 'nestjs-paginate';
 import { BaseCrudService } from '../../common/services/baseCrud.service';
@@ -75,5 +75,72 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
       meta: paginatedResults.meta,
       links: paginatedResults.links,
     };
+  }
+
+  async updateStatus(id: number, dto: { status: BrokerReferredLeadStatus }) {
+    const entity = await this.findById(id);
+    let updatePayload: Partial<BrokerReferredLead> = {};
+
+    switch (dto.status) {
+      case BrokerReferredLeadStatus.LEAD_ACCEPTED:
+        if (entity.status !== BrokerReferredLeadStatus.LEAD_SUBMITTED) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+
+      case BrokerReferredLeadStatus.LEAD_REJECTED:
+        if (entity.status !== BrokerReferredLeadStatus.LEAD_SUBMITTED) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+
+      case BrokerReferredLeadStatus.TOUR_BOOKED:
+        if (entity.status !== BrokerReferredLeadStatus.LEAD_ACCEPTED) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+
+      case BrokerReferredLeadStatus.TOUR_COMPLETED:
+        if (entity.status !== BrokerReferredLeadStatus.TOUR_BOOKED) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+
+      case BrokerReferredLeadStatus.CLIENT_DEAL_SIGNED:
+        if (entity.status !== BrokerReferredLeadStatus.TOUR_COMPLETED) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+
+      case BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED:
+        if (entity.status !== BrokerReferredLeadStatus.CLIENT_DEAL_SIGNED) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+
+      case BrokerReferredLeadStatus.BROKER_PAYMENT_INITIATED:
+        if (
+          entity.status !== BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED
+        ) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+
+      case BrokerReferredLeadStatus.BROKER_PAYMENT_COMPLETED:
+        if (
+          entity.status !== BrokerReferredLeadStatus.BROKER_PAYMENT_INITIATED
+        ) {
+          throw new BadRequestException(`Not Allowed`);
+        }
+        updatePayload.status = dto.status;
+        break;
+    }
   }
 }

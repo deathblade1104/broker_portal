@@ -12,7 +12,6 @@ import { BrokerReferredLeadsModule } from './modules/broker_referred_leads/broke
 import { CompaniesModule } from './modules/companies/companies.module';
 import { HealthModule } from './modules/health/health.module';
 import { SlotsModule } from './modules/tour_slots/tour_slots.module';
-import { TourBookingsModule } from './modules/tour_bookings/tour_bookings.module';
 import { UsersModule } from './modules/users/users.module';
 import { BuildingModule } from './services/building/building.module';
 
@@ -31,7 +30,6 @@ import { BuildingModule } from './services/building/building.module';
     BrokerReferredLeadsModule,
     BrokerLeadHistoryModule,
     SlotsModule,
-    TourBookingsModule,
     //ClosedLeadsModule,
     //BrokerFeeBreakupsModule,
   ],

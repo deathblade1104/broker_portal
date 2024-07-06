@@ -16,5 +16,14 @@ export class Building implements IMongoBuilding {
   address: IBuildingAddress;
 
   @Column()
-  region : string;
+  region: string;
+
+  @Column()
+  tier: string;
+
+  @Column()
+  microMarket: string;
+
+  @Column()
+  locationUuid: string;
 }

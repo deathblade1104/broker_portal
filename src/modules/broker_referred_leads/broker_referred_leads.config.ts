@@ -88,6 +88,7 @@ export const brokerReferredLeadConfig: PaginateConfig<BrokerReferredLead> = {
    */
   filterableColumns: {
     status: [FilterOperator.EQ],
+    broker_id: [FilterOperator.EQ],
     created_at: [FilterOperator.BTW, FilterOperator.GTE, FilterOperator.LTE],
     updated_at: [FilterOperator.BTW, FilterOperator.GTE, FilterOperator.LTE],
   },

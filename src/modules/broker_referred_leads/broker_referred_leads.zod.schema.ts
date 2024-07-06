@@ -1,6 +1,6 @@
 import { z } from 'nestjs-zod/z';
 
-const mongoIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, {
+export const mongoIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, {
   message: 'Invalid MongoDB ObjectId',
 });
 

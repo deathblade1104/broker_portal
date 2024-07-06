@@ -39,6 +39,15 @@ export class IMongoBuilding {
 
   @ApiProperty()
   region: string;
+
+  @ApiProperty()
+  tier: string;
+
+  @ApiProperty()
+  microMarket: string;
+
+  @ApiProperty()
+  locationUuid: string;
 }
 
 export class IBuilding {
@@ -54,6 +63,15 @@ export class IBuilding {
   @ApiPropertyOptional()
   address?: IBuildingAddress;
 
-  @ApiPropertyOptional()
-  region?: string;
+  @ApiProperty()
+  region: string;
+
+  @ApiProperty()
+  tier: string;
+
+  @ApiProperty()
+  microMarket: string;
+
+  @ApiProperty()
+  location_uid: string;
 }

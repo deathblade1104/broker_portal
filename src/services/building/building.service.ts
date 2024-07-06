@@ -33,6 +33,7 @@ export class BuildingService {
     const res: IBuilding = {
       ...currBuilding,
       id: currBuilding._id.toString(),
+      location_uid: currBuilding.locationUuid,
     };
 
     return res;
@@ -46,6 +47,7 @@ export class BuildingService {
       buildingsHashMap[`${building._id}`] = {
         ...building,
         id: building._id.toString(),
+        location_uid: building.locationUuid,
       };
     }
     return buildingsHashMap;

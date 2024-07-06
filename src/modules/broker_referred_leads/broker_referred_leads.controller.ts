@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   UsePipes,
 } from '@nestjs/common';
@@ -57,4 +58,7 @@ export class BrokerReferredLeadsController {
       await this.brokerReferredLeadsService.getLead(+id),
     );
   }
+
+  @Put(':id/status')
+  async updateStatus(@Param('id') id: string) {}
 }
