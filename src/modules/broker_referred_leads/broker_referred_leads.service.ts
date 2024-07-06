@@ -142,16 +142,16 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
       dto['closed_at'] = new Date();
     }
 
+    await this.userService.sendEmail(
+      entity.broker_id,
+      'Intimation for Lead Status Change',
+      `Your referred lead changed it's status from ${entity.status} to ${dto.status}. Kindly perform the necessary actions to move ahead.`,
+    );
     await this.updateById(id, dto, entity);
     await this.brokerLeadHistoriesService.createOne({
       lead_id: id,
       status: dto.status,
     });
-    await this.userService.sendEmail(
-      entity.broker_id,
-      'Intimation',
-      `ABC_XYZ changed it's status to s${dto.status}`,
-    );
     return await this.getLead(id);
   }
 }

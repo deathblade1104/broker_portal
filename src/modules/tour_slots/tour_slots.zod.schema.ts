@@ -5,5 +5,5 @@ export const CreateTourSlotSchema = z.object({
   broker_id: z.number().int().min(1),
   lead_id: z.number().int().min(1),
   building_id: mongoIdSchema,
-  start_time: z.dateString().future().cast(),
+  start_time: z.dateString().future(),
 });

@@ -119,7 +119,7 @@ class FeeCalculator {
     acv: number,
   ): number {
     if (total_months < 18) {
-      return Math.floor(0.1 * year_prices[0] + 0.03 * year_prices[0]);
+      return Math.floor(0.1 * year_prices[0] + 0.03 * year_prices[1]);
     } else if (total_months >= 18 && total_months <= 35) {
       return Math.floor(0.15 * acv);
     } else if (total_months >= 36 && total_months <= 60) {

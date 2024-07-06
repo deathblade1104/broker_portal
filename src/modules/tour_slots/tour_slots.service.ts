@@ -91,15 +91,15 @@ export class TourSlotsService extends BaseCrudService<TourSlots> {
 
     if (lead.status !== BrokerReferredLeadStatus.LEAD_ACCEPTED) {
       throw new BadRequestException(
-        `We can only make tour bookings for leads that have been accepeted.`,
+        `We can only make tour bookings for leads that have been accepted.`,
       );
     }
 
-    const startTime = createTourSlotDto.start_time;
+    const startTime = new Date(createTourSlotDto.start_time);
     const endTime = startTime;
     endTime.setHours(startTime.getHours() + 1);
 
-    const tourSlot = await this.upsertOne({
+    const tourSlot = await this.repo.save({
       ...createTourSlotDto,
       uid: uuidv4(),
       start_time: startTime,
@@ -107,12 +107,9 @@ export class TourSlotsService extends BaseCrudService<TourSlots> {
       is_completed: false,
     });
 
-    await this.brokerReferredLeadsService.updateById(tourSlot.lead_id, {
+    await this.brokerReferredLeadsService.updateStatus(tourSlot.lead_id, {
       status: BrokerReferredLeadStatus.TOUR_BOOKED,
     });
-
-    //integrate email
-
     return tourSlot;
   }
 
@@ -142,10 +139,10 @@ export class TourSlotsService extends BaseCrudService<TourSlots> {
     }
 
     entity = await this.updateById(id, { is_completed: true });
-    await this.brokerReferredLeadsService.updateManyWithIds([entity.lead_id], {
+    await this.brokerReferredLeadsService.updateStatus(entity.lead_id, {
       status: BrokerReferredLeadStatus.TOUR_COMPLETED,
     });
-    //integrate email
+
     return entity;
   }
 }

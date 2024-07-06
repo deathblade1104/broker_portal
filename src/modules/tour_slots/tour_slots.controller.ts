@@ -50,7 +50,7 @@ export class TourSlotsController {
     );
   }
 
-  @Get(':id')
+  @Get('id/:id')
   async getById(@Param('id') id: string) {
     return new CustomResponseBody(
       `Fetched Tour Booking Slot`,
@@ -67,7 +67,7 @@ export class TourSlotsController {
     );
   }
 
-  @Put(':id/completed')
+  @Put('id/:id/completed')
   async completeTour(@Param('id') id: string) {
     return new CustomResponseBody(
       `Marked tour booking with ${id} as completed`,
