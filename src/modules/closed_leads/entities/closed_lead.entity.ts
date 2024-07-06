@@ -26,7 +26,7 @@ export class ClosedLead extends AbstractEntity<ClosedLead> {
   price_per_desk: number;
 
   @Column()
-  move_in_date: number;
+  move_in_date: Date;
 
   @Column()
   tenure: number;

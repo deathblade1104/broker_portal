@@ -24,6 +24,7 @@ import {
   LeadsPaginatedResponseDto,
   UpdateStatusDto,
 } from './dto';
+import { BrokerReferredLead } from './entities/broker_referred_lead.entity';
 
 @ApiTags('broker-referred-leads')
 @Controller('broker-referred-leads')
@@ -69,6 +70,17 @@ export class BrokerReferredLeadsController {
     return new CustomResponseBody(
       'Lead Status Updated Successfully',
       await this.brokerReferredLeadsService.updateStatus(+id, dto),
+    );
+  }
+
+  @Put(':id/edit')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: Partial<BrokerReferredLead>,
+  ) {
+    return new CustomResponseBody(
+      'Lead Edited Successfully',
+      await this.brokerReferredLeadsService.updateById(+id, dto),
     );
   }
 }

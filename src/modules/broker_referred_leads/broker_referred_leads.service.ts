@@ -4,6 +4,7 @@ import { paginate, PaginateQuery } from 'nestjs-paginate';
 import { BaseCrudService } from '../../common/services/baseCrud.service';
 import { BuildingService } from '../../services/building/building.service';
 import { BrokerLeadHistoriesService } from '../broker_lead_history/broker_lead_history.service';
+import { ClosedLeadsService } from '../closed_leads/closed_leads.service';
 import { UsersService } from '../users/users.service';
 import { brokerReferredLeadConfig } from './broker_referred_leads.config';
 import { BrokerReferredLeadStatus } from './broker_referred_leads.enum';
@@ -25,6 +26,7 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     private readonly buildingService: BuildingService,
     private readonly brokerLeadHistoriesService: BrokerLeadHistoriesService,
     private readonly userService: UsersService,
+    private readonly closedLeadsService: ClosedLeadsService,
   ) {
     super(repo, 'BrokerReferredLeads');
   }
@@ -140,6 +142,21 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
 
     if (dto.status === BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED) {
       dto['closed_at'] = new Date();
+      await this.closedLeadsService.createClosedLead(
+        {
+          lead_id: entity.id,
+          broker_id: entity.broker_id,
+          no_of_desks: entity.no_of_desks,
+          price_per_desk: entity.budget_per_desk,
+          move_in_date: entity.target_move_in_date,
+          tenure: entity.tenure_in_months,
+        },
+        feeCalculator.calculateRevenueFinal(
+          entity.no_of_desks,
+          entity.budget_per_desk,
+          entity.tenure_in_months,
+        ),
+      );
     }
 
     await this.userService.sendEmail(
