@@ -86,6 +86,42 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     };
   }
 
+  private validateStatusTransition(
+    currentStatus: BrokerReferredLeadStatus,
+    newStatus: BrokerReferredLeadStatus,
+  ) {
+    const allowedTransitions = {
+      [BrokerReferredLeadStatus.LEAD_SUBMITTED]: [
+        BrokerReferredLeadStatus.LEAD_ACCEPTED,
+        BrokerReferredLeadStatus.LEAD_REJECTED,
+      ],
+      [BrokerReferredLeadStatus.LEAD_ACCEPTED]: [
+        BrokerReferredLeadStatus.TOUR_BOOKED,
+      ],
+      [BrokerReferredLeadStatus.TOUR_BOOKED]: [
+        BrokerReferredLeadStatus.TOUR_COMPLETED,
+      ],
+      [BrokerReferredLeadStatus.TOUR_COMPLETED]: [
+        BrokerReferredLeadStatus.CLIENT_DEAL_LOST,
+        BrokerReferredLeadStatus.CLIENT_DEAL_SIGNED,
+      ],
+      [BrokerReferredLeadStatus.CLIENT_DEAL_SIGNED]: [
+        BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED,
+      ],
+      [BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED]: [
+        BrokerReferredLeadStatus.BROKER_PAYMENT_INITIATED,
+      ],
+      [BrokerReferredLeadStatus.BROKER_PAYMENT_INITIATED]: [
+        BrokerReferredLeadStatus.BROKER_PAYMENT_COMPLETED,
+      ],
+    };
+
+    const validTransitions = allowedTransitions[currentStatus] || [];
+    if (!validTransitions.includes(newStatus)) {
+      throw new BadRequestException(`Not Allowed`);
+    }
+  }
+
   async updateStatus(id: number, dto: { status: BrokerReferredLeadStatus }) {
     const entity = await this.findById(id);
     let updatePayload: Partial<BrokerReferredLead> = {};
