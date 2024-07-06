@@ -73,7 +73,7 @@ spec:
             - name: EMAIL_USER
               value: "shr.test.wwi@gmail.com"
             - name: EMAIL_PASSWORD
-              value: "Asdf!234"
+              value: "tmeo grup bkun mowc"
             - name: EMAIL_FROM
               value: "shr.test.wwi@gmail.com"
 ---
