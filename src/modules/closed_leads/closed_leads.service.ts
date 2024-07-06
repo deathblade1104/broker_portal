@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreateClosedLeadDto } from './dto/create-closed_lead.dto';
-import { UpdateClosedLeadDto } from './dto/update-closed_lead.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BaseCrudService } from '../../common/services/baseCrud.service';
+import { RevenueResult } from '../broker_referred_leads/dto';
+import { ClosedLeadsRepository } from './closed_leads.repository';
+import { CreateClosedLeadDto } from './dto';
+import { ClosedLead } from './entities/closed_lead.entity';
 
 @Injectable()
-export class ClosedLeadsService {
-  create(createClosedLeadDto: CreateClosedLeadDto) {
-    return 'This action adds a new closedLead';
+export class ClosedLeadsService extends BaseCrudService<ClosedLead> {
+  constructor(
+    @InjectRepository(ClosedLeadsRepository)
+    private readonly repo: ClosedLeadsRepository,
+  ) {
+    super(repo, 'ClosedLeads');
   }
 
-  findAll() {
-    return `This action returns all closedLeads`;
-  }
+  async createClosedLead(
+    dto: CreateClosedLeadDto,
+    revenue: RevenueResult,
+  ): Promise<ClosedLead> {
+    const closedLead = await this.upsertOne({
+      ...dto,
+      tcv: revenue.tcv,
+      earnings: revenue.brokerage,
+      acv: revenue.acv,
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} closedLead`;
-  }
-
-  update(id: number, updateClosedLeadDto: UpdateClosedLeadDto) {
-    return `This action updates a #${id} closedLead`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} closedLead`;
+    return closedLead;
   }
 }

@@ -1,8 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { RevenueResult } from './dto';
 
-@Injectable()
-export class FeeCalculator {
+class FeeCalculator {
   calculateRevenue(
     no_of_desks: number,
     arpm: number,
@@ -44,8 +43,12 @@ export class FeeCalculator {
 
     const tcv = year_prices.reduce((acc, val) => acc + val, 0);
     const acv = this.calculateACV(tcv, total_months);
-
-    return new RevenueResult(year_prices, tcv, acv);
+    return new RevenueResult(
+      year_prices,
+      tcv,
+      acv,
+      this.calculateBrokerage(total_months, year_prices, acv),
+    );
   }
 
   calculateRevenueFinal(
@@ -98,7 +101,12 @@ export class FeeCalculator {
     const tcv = year_prices.reduce((acc, val) => acc + val, 0);
     const acv = this.calculateACV(tcv, total_months);
 
-    return new RevenueResult(year_prices, tcv, acv);
+    return new RevenueResult(
+      year_prices,
+      tcv,
+      acv,
+      this.calculateBrokerage(total_months, year_prices, acv),
+    );
   }
 
   calculateACV(tcv: number, total_months: number): number {
@@ -107,18 +115,19 @@ export class FeeCalculator {
 
   calculateBrokerage(
     total_months: number,
-    revenueFinal: RevenueResult,
+    year_prices: number[],
+    acv: number,
   ): number {
     if (total_months < 18) {
-      return Math.floor(
-        0.1 * revenueFinal.year_prices[0] + 0.03 * revenueFinal.year_prices[0],
-      );
+      return Math.floor(0.1 * year_prices[0] + 0.03 * year_prices[0]);
     } else if (total_months >= 18 && total_months <= 35) {
-      return Math.floor(0.15 * revenueFinal.acv);
+      return Math.floor(0.15 * acv);
     } else if (total_months >= 36 && total_months <= 60) {
-      return Math.floor(0.18 * revenueFinal.acv);
+      return Math.floor(0.18 * acv);
     } else {
       throw new BadRequestException('Invalid total months value');
     }
   }
 }
+
+export const feeCalculator = new FeeCalculator();

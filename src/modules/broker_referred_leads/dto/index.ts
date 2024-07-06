@@ -31,13 +31,10 @@ export class LeadsPaginatedResponseDto {
 }
 
 export class RevenueResult {
-  year_prices: number[];
-  tcv: number;
-  acv: number;
-
-  constructor(year_prices: number[], tcv: number, acv: number) {
-    this.year_prices = year_prices;
-    this.tcv = tcv;
-    this.acv = acv;
-  }
+  constructor(
+    public year_prices: number[],
+    public tcv: number,
+    public acv: number,
+    public brokerage: number,
+  ) {}
 }

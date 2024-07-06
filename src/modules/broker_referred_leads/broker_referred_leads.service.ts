@@ -13,7 +13,7 @@ import {
   LeadWithBuilding,
 } from './dto';
 import { BrokerReferredLead } from './entities/broker_referred_lead.entity';
-import { FeeCalculator } from './feeCalculator';
+import { feeCalculator } from './feeCalculator';
 
 @Injectable()
 export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLead> {
@@ -22,7 +22,6 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     private readonly repo: BrokerReferredLeadsRepository,
     private readonly buildingService: BuildingService,
     private readonly brokerLeadHistoriesService: BrokerLeadHistoriesService,
-    private readonly feeCalculator: FeeCalculator,
   ) {
     super(repo, 'BrokerReferredLeads');
   }
@@ -30,14 +29,15 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
   async createLead(
     dto: CreateBrokerReferredLeadDto,
   ): Promise<LeadWithBuilding> {
-    const revenue = this.feeCalculator.calculateRevenueFinal(
+    const revenue = feeCalculator.calculateRevenueFinal(
       dto.no_of_desks,
       dto.budget_per_desk,
       dto.tenure_in_months,
     );
     const currLead = await this.upsertOne({
       ...dto,
-      projected_earnings: revenue.tcv,
+      projected_earnings: revenue.brokerage,
+      projected_contract_value: revenue.tcv,
     });
     await this.brokerLeadHistoriesService.upsertOne({
       lead_id: currLead.id,
@@ -122,70 +122,23 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     }
   }
 
-  async updateStatus(id: number, dto: { status: BrokerReferredLeadStatus }) {
+  async updateStatus(id: number, dto: Partial<BrokerReferredLead>) {
+    if (!dto.status) throw new BadRequestException(`Need a status update`);
+
     const entity = await this.findById(id);
-    let updatePayload: Partial<BrokerReferredLead> = {};
+    this.validateStatusTransition(entity.status, dto.status);
 
-    switch (dto.status) {
-      case BrokerReferredLeadStatus.LEAD_ACCEPTED:
-        if (entity.status !== BrokerReferredLeadStatus.LEAD_SUBMITTED) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
+    if (
+      dto.status === BrokerReferredLeadStatus.BROKER_PAYMENT_INITIATED &&
+      !dto.invoice_url
+    ) {
+      throw new BadRequestException(
+        `Can't initiate payment without, an invoice.`,
+      );
+    }
 
-      case BrokerReferredLeadStatus.LEAD_REJECTED:
-        if (entity.status !== BrokerReferredLeadStatus.LEAD_SUBMITTED) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
-
-      case BrokerReferredLeadStatus.TOUR_BOOKED:
-        if (entity.status !== BrokerReferredLeadStatus.LEAD_ACCEPTED) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
-
-      case BrokerReferredLeadStatus.TOUR_COMPLETED:
-        if (entity.status !== BrokerReferredLeadStatus.TOUR_BOOKED) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
-
-      case BrokerReferredLeadStatus.CLIENT_DEAL_SIGNED:
-        if (entity.status !== BrokerReferredLeadStatus.TOUR_COMPLETED) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
-
-      case BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED:
-        if (entity.status !== BrokerReferredLeadStatus.CLIENT_DEAL_SIGNED) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
-
-      case BrokerReferredLeadStatus.BROKER_PAYMENT_INITIATED:
-        if (
-          entity.status !== BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED
-        ) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
-
-      case BrokerReferredLeadStatus.BROKER_PAYMENT_COMPLETED:
-        if (
-          entity.status !== BrokerReferredLeadStatus.BROKER_PAYMENT_INITIATED
-        ) {
-          throw new BadRequestException(`Not Allowed`);
-        }
-        updatePayload.status = dto.status;
-        break;
+    if (dto.status === BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED) {
+      dto.closed_at = new Date();
     }
   }
 }

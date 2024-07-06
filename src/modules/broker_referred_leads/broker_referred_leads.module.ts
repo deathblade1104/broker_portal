@@ -6,7 +6,6 @@ import { BrokerReferredLeadsController } from './broker_referred_leads.controlle
 import { BrokerReferredLeadsService } from './broker_referred_leads.service';
 import { BrokerReferredLeadsRepository } from './broker_referrred_leads.repository';
 import { BrokerReferredLead } from './entities/broker_referred_lead.entity';
-import { FeeCalculator } from './feeCalculator';
 
 @Module({
   imports: [
@@ -15,11 +14,7 @@ import { FeeCalculator } from './feeCalculator';
     BrokerLeadHistoryModule,
   ],
   controllers: [BrokerReferredLeadsController],
-  providers: [
-    BrokerReferredLeadsService,
-    BrokerReferredLeadsRepository,
-    FeeCalculator,
-  ],
-  exports: [BrokerReferredLeadsService],
+  providers: [BrokerReferredLeadsService, BrokerReferredLeadsRepository],
+  exports: [BrokerReferredLeadsService], // Export FeeCalculator here
 })
 export class BrokerReferredLeadsModule {}

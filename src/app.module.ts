@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BankAccountsModule } from './modules/bank_accounts/bank_accounts.module';
 import { BrokerLeadHistoryModule } from './modules/broker_lead_history/broker_lead_history.module';
 import { BrokerReferredLeadsModule } from './modules/broker_referred_leads/broker_referred_leads.module';
+import { ClosedLeadsModule } from './modules/closed_leads/closed_leads.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { HealthModule } from './modules/health/health.module';
 import { SlotsModule } from './modules/tour_slots/tour_slots.module';
@@ -30,7 +31,7 @@ import { BuildingModule } from './services/building/building.module';
     BrokerReferredLeadsModule,
     BrokerLeadHistoryModule,
     SlotsModule,
-    //ClosedLeadsModule,
+    ClosedLeadsModule,
     //BrokerFeeBreakupsModule,
   ],
   controllers: [AppController],

@@ -21,6 +21,9 @@ export class BrokerReferredLead extends AbstractEdittableEntity<BrokerReferredLe
   @Column()
   projected_earnings: number;
 
+  @Column()
+  projected_contract_value: number;
+
   @Column({ type: 'varchar' })
   building_id: string;
 
