@@ -11,8 +11,9 @@ import {
   CreateBrokerReferredLeadDto,
   LeadsPaginatedResponseDto,
   LeadWithBuilding,
-} from './dto/create-broker_referred_lead.dto';
+} from './dto';
 import { BrokerReferredLead } from './entities/broker_referred_lead.entity';
+import { FeeCalculator } from './feeCalculator';
 
 @Injectable()
 export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLead> {
@@ -21,6 +22,7 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     private readonly repo: BrokerReferredLeadsRepository,
     private readonly buildingService: BuildingService,
     private readonly brokerLeadHistoriesService: BrokerLeadHistoriesService,
+    private readonly feeCalculator: FeeCalculator,
   ) {
     super(repo, 'BrokerReferredLeads');
   }
@@ -28,7 +30,15 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
   async createLead(
     dto: CreateBrokerReferredLeadDto,
   ): Promise<LeadWithBuilding> {
-    const currLead = await this.upsertOne({ ...dto });
+    const revenue = this.feeCalculator.calculateRevenueFinal(
+      dto.no_of_desks,
+      dto.budget_per_desk,
+      dto.tenure_in_months,
+    );
+    const currLead = await this.upsertOne({
+      ...dto,
+      projected_earnings: revenue.tcv,
+    });
     await this.brokerLeadHistoriesService.upsertOne({
       lead_id: currLead.id,
       status: BrokerReferredLeadStatus.LEAD_SUBMITTED,
@@ -66,7 +76,6 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     const dataArr: LeadWithBuilding[] = [];
 
     for (const data of paginatedResults.data) {
-      console.log(buildingHashmap[data.building_id]);
       dataArr.push({ ...data, building: buildingHashmap[data.building_id] });
     }
 

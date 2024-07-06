@@ -16,10 +16,7 @@ import { CustomResponseBody } from '../../common/providers/customResponse';
 import { brokerReferredLeadConfig } from './broker_referred_leads.config';
 import { BrokerReferredLeadsService } from './broker_referred_leads.service';
 import { BrokerReferredLeadsSchema } from './broker_referred_leads.zod.schema';
-import {
-  CreateBrokerReferredLeadDto,
-  LeadsPaginatedResponseDto,
-} from './dto/create-broker_referred_lead.dto';
+import { CreateBrokerReferredLeadDto, LeadsPaginatedResponseDto } from './dto';
 
 @ApiTags('broker-referred-leads')
 @Controller('broker-referred-leads')

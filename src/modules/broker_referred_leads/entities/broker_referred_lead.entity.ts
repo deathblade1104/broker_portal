@@ -18,6 +18,9 @@ export class BrokerReferredLead extends AbstractEdittableEntity<BrokerReferredLe
   @Column()
   tenure_in_months: number;
 
+  @Column()
+  projected_earnings: number;
+
   @Column({ type: 'varchar' })
   building_id: string;
 
