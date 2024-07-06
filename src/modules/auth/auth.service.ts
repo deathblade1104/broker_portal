@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { EmailService } from '../../services/email/email.service';
 import { CompaniesService } from '../companies/companies.service';
 import { SignUpUserDto } from '../users/dto/create-user.dto';
 import { User } from '../users/entities/user.entity';
@@ -13,6 +14,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly companiesService: CompaniesService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async signup(userData: SignUpUserDto): Promise<User> {
@@ -42,7 +44,7 @@ export class AuthService {
       );
     }
 
-    console.log(userData.password);
+    
 
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     userData.password = hashedPassword;
@@ -60,7 +62,11 @@ export class AuthService {
       );
       userPayload.company_id = newCompany.id;
     }
-
+    await this.emailService.sendMail(
+      userData.email,
+      'Signup Message',
+      `Signed Up Successfully for Broker Portal`,
+    );
     return await this.usersService.createUser(userPayload);
   }
 
