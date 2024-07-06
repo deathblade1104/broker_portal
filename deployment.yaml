@@ -64,6 +64,18 @@ spec:
               value: debug
             - name: DB_LOGGING
               value: "false"
+            - name: EMAIL_HOST
+              value: "smtp.gmail.com"
+            - name: EMAIL_PORT
+              value: "465"
+            - name: EMAIL_SECURE
+              value: "true"
+            - name: EMAIL_USER
+              value: "shr.test.wwi@gmail.com"
+            - name: EMAIL_PASSWORD
+              value: "Asdf!234"
+            - name: EMAIL_FROM
+              value: "shr.test.wwi@gmail.com"
 ---
 apiVersion: v1
 kind: Service
