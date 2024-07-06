@@ -15,11 +15,13 @@ import { HealthModule } from './modules/health/health.module';
 import { SlotsModule } from './modules/tour_slots/tour_slots.module';
 import { UsersModule } from './modules/users/users.module';
 import { BuildingModule } from './services/building/building.module';
+import { EmailModule } from './services/email/email.module';
 
 @Module({
   imports: [
     AnalyticsModule,
     AuthModule,
+    EmailModule,
     BuildingModule,
     ConfigModule,
     HealthModule,

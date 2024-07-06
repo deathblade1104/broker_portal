@@ -32,4 +32,12 @@ export default () => ({
     username: parsedConfig.data.MONGO_USERNAME,
     password: parsedConfig.data.MONGO_PASSWORD,
   },
+  email: {
+    host: parsedConfig.data.EMAIL_HOST,
+    port: parsedConfig.data.EMAIL_PORT,
+    secure: parsedConfig.data.EMAIL_SECURE,
+    user: parsedConfig.data.EMAIL_USER,
+    password: parsedConfig.data.EMAIL_PASSWORD,
+    from: parsedConfig.data.EMAIL_FROM,
+  },
 });

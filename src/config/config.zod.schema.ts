@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'nestjs-zod/z';
 
 export const configSchema = z.object({
   PG_HOST: z.string().min(1, 'PG_HOST is required'),
@@ -17,6 +17,12 @@ export const configSchema = z.object({
   METABASE_EXPIRY: z.coerce.number(),
   MONGO_USERNAME: z.string().min(1, 'MONGO_USERNAME is required'),
   MONGO_PASSWORD: z.string().min(1, 'MONGO_PASSWORD is required'),
+  EMAIL_HOST: z.string().min(1),
+  EMAIL_PORT: z.coerce.number().int(),
+  EMAIL_SECURE: z.coerce.boolean(),
+  EMAIL_USER: z.string().email(),
+  EMAIL_PASSWORD: z.password(),
+  EMAIL_FROM: z.string().email(),
 });
 
 export type EnvConfig = z.infer<typeof configSchema>;

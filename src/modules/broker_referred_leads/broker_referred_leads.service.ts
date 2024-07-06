@@ -4,6 +4,7 @@ import { paginate, PaginateQuery } from 'nestjs-paginate';
 import { BaseCrudService } from '../../common/services/baseCrud.service';
 import { BuildingService } from '../../services/building/building.service';
 import { BrokerLeadHistoriesService } from '../broker_lead_history/broker_lead_history.service';
+import { UsersService } from '../users/users.service';
 import { brokerReferredLeadConfig } from './broker_referred_leads.config';
 import { BrokerReferredLeadStatus } from './broker_referred_leads.enum';
 import { BrokerReferredLeadsRepository } from './broker_referrred_leads.repository';
@@ -11,6 +12,7 @@ import {
   CreateBrokerReferredLeadDto,
   LeadsPaginatedResponseDto,
   LeadWithBuilding,
+  UpdateStatusDto,
 } from './dto';
 import { BrokerReferredLead } from './entities/broker_referred_lead.entity';
 import { feeCalculator } from './feeCalculator';
@@ -22,6 +24,7 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     private readonly repo: BrokerReferredLeadsRepository,
     private readonly buildingService: BuildingService,
     private readonly brokerLeadHistoriesService: BrokerLeadHistoriesService,
+    private readonly userService: UsersService,
   ) {
     super(repo, 'BrokerReferredLeads');
   }
@@ -122,9 +125,7 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     }
   }
 
-  async updateStatus(id: number, dto: Partial<BrokerReferredLead>) {
-    if (!dto.status) throw new BadRequestException(`Need a status update`);
-
+  async updateStatus(id: number, dto: UpdateStatusDto) {
     const entity = await this.findById(id);
     this.validateStatusTransition(entity.status, dto.status);
 
@@ -138,7 +139,19 @@ export class BrokerReferredLeadsService extends BaseCrudService<BrokerReferredLe
     }
 
     if (dto.status === BrokerReferredLeadStatus.CLIENT_PAYMENT_RECEIVED) {
-      dto.closed_at = new Date();
+      dto['closed_at'] = new Date();
     }
+
+    await this.updateById(id, dto, entity);
+    await this.brokerLeadHistoriesService.createOne({
+      lead_id: id,
+      status: dto.status,
+    });
+    await this.userService.sendEmail(
+      entity.broker_id,
+      'Intimation',
+      `ABC_XYZ changed it's status to s${dto.status}`,
+    );
+    return await this.getLead(id);
   }
 }

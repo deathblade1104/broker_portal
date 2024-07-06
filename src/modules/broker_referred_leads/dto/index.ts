@@ -6,11 +6,18 @@ import {
 } from '../../../common/dtos/paginatedResponse.dto';
 import { IBuilding } from '../../../services/building/building.interface';
 import { BrokerLeadHistories } from '../../broker_lead_history/broker_lead_histories.entity';
-import { BrokerReferredLeadsSchema } from '../broker_referred_leads.zod.schema';
+import {
+  BrokerReferredLeadsSchema,
+  UpdateBrokerReferredLeadsSchema,
+} from '../broker_referred_leads.zod.schema';
 import { BrokerReferredLead } from '../entities/broker_referred_lead.entity';
 
 export class CreateBrokerReferredLeadDto extends createZodDto(
   BrokerReferredLeadsSchema,
+) {}
+
+export class UpdateStatusDto extends createZodDto(
+  UpdateBrokerReferredLeadsSchema,
 ) {}
 
 export class LeadWithBuilding extends BrokerReferredLead {

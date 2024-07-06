@@ -15,8 +15,15 @@ import { ZodPipe } from '../../common/pipes/zod.pipe';
 import { CustomResponseBody } from '../../common/providers/customResponse';
 import { brokerReferredLeadConfig } from './broker_referred_leads.config';
 import { BrokerReferredLeadsService } from './broker_referred_leads.service';
-import { BrokerReferredLeadsSchema } from './broker_referred_leads.zod.schema';
-import { CreateBrokerReferredLeadDto, LeadsPaginatedResponseDto } from './dto';
+import {
+  BrokerReferredLeadsSchema,
+  UpdateBrokerReferredLeadsSchema,
+} from './broker_referred_leads.zod.schema';
+import {
+  CreateBrokerReferredLeadDto,
+  LeadsPaginatedResponseDto,
+  UpdateStatusDto,
+} from './dto';
 
 @ApiTags('broker-referred-leads')
 @Controller('broker-referred-leads')
@@ -43,7 +50,7 @@ export class BrokerReferredLeadsController {
   @ApiCustomResponseObject(LeadsPaginatedResponseDto)
   async findAll(@Query() query: PaginateQuery) {
     return new CustomResponseBody(
-      'Leads Paginated and Fetched Successfully',
+      'Lead Paginated and Fetched Successfully',
       await this.brokerReferredLeadsService.getAllPaginated(query),
     );
   }
@@ -51,11 +58,17 @@ export class BrokerReferredLeadsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return new CustomResponseBody(
-      'Leads Fetched Successfully',
+      'Lead Fetched Successfully',
       await this.brokerReferredLeadsService.getLead(+id),
     );
   }
 
   @Put(':id/status')
-  async updateStatus(@Param('id') id: string) {}
+  @UsePipes(new ZodPipe(UpdateBrokerReferredLeadsSchema))
+  async updateStatus(@Param('id') id: string, @Body() dto: UpdateStatusDto) {
+    return new CustomResponseBody(
+      'Lead Status Updated Successfully',
+      await this.brokerReferredLeadsService.updateStatus(+id, dto),
+    );
+  }
 }
