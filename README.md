@@ -45,29 +45,13 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
 
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Broker Portal
+![High Level Diagram ] (Brokered_High_Level_Diagram.png?raw=true "HLD")
+![Database Design Diagram ] (Brokered_Database_Design.png.png?raw=true "DB Design")
 
-## License
-
-Nest is [MIT licensed](LICENSE).

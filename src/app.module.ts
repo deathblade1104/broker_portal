@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { MongoModule } from './database/mongo/mongo.module';
 import { PostgresModule } from './database/postgres/postgres.module';
-import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BankAccountsModule } from './modules/bank_accounts/bank_accounts.module';
 import { BrokerLeadHistoryModule } from './modules/broker_lead_history/broker_lead_history.module';
@@ -19,7 +18,6 @@ import { EmailModule } from './services/email/email.module';
 
 @Module({
   imports: [
-    AnalyticsModule,
     AuthModule,
     EmailModule,
     BuildingModule,
@@ -34,7 +32,6 @@ import { EmailModule } from './services/email/email.module';
     BrokerLeadHistoryModule,
     SlotsModule,
     ClosedLeadsModule,
-    //BrokerFeeBreakupsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
