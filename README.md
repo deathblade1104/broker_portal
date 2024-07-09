@@ -52,6 +52,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 
 # Broker Portal
-![High Level Diagram ] (Brokered_High_Level_Diagram.png?raw=true "HLD")
-![Database Design Diagram ] (Brokered_Database_Design.png.png?raw=true "DB Design")
+![High Level Diagram](Brokered_High_Level_Diagram.png?raw=true "HLD")
+![Database Design Diagram](Brokered_Database_Design.png?raw=true "DB Design")
+
 
