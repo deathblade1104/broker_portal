@@ -1,3 +1,11 @@
+# High Level Diagram
+![High Level Diagram](Brokered_High_Level_Diagram.png?raw=true "HLD")
+
+# Database Design Diagram
+![Database Design Diagram](Brokered_Database_Design.png?raw=true "DB Design")
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
@@ -50,9 +58,5 @@ $ yarn run start:prod
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-
-# Broker Portal
-![High Level Diagram](Brokered_High_Level_Diagram.png?raw=true "HLD")
-![Database Design Diagram](Brokered_Database_Design.png?raw=true "DB Design")
 
 
